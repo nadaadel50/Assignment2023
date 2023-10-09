@@ -50,6 +50,7 @@ void loadImage () {
     cout << "4- Flip Filter" << endl;
     cout << "5- Rotate Filter" << endl;
     cout << "6- Darken & Lighten Filter" << endl;
+    cout << "7- Shrink Image" << endl;
     cout << "0- Exit" << endl;
     cin >> choice;
     // Add to it .bmp extension and load image
@@ -85,7 +86,7 @@ void saveImage () {
         strcat(image2File, ".bmp");
         writeGSBMP(image2File, image3);
     }
-    else if(choice == 5 && degree == 90 || degree == 270 ){
+    else if(choice == 5 && degree == 90 || degree == 270 || choice == 7){
         char image2File[100];
         cout << "Enter the target image file name:";
         cin >> image2File;
@@ -213,5 +214,39 @@ void doSomethingForImage() {
                 }
             }
         }
+    }
+    else if(choice == 9){
+        // Shrink image
+        cout << "Shrink to (1/2), (1/3) or (1/4)? " << endl;
+        string shrink; cin >> shrink;
+        // To make the background white we will loop in every pixel and make it equal 255
+        for(int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                image2[i][j] = 255;
+            }
+        }
+        if(shrink == "1/2"){
+            // We will need to make the image of size 64*64 , so we need to put each 2 pixels in 1 pixel only in image2
+            for(int i = 0; i < SIZE/2+1; i++){
+                for(int j = 0; j < SIZE/2+1; j++){
+                    image2[i][j] = image[i*2][j*2];
+                }
+            }
+        }
+        else if(shrink == "1/3"){
+            // We will need to make the image of size 32*32, so we need to put each 3 pixels in 1 pixel only in image2
+            for(int i = 0; i < SIZE/3+1; i++){
+                for(int j = 0; j < SIZE/3+1; j++){
+                    image2[i][j] = image[i*3][j*3];
+                }
+            }
+        }
+        else if(shrink == "1/4")
+            // We will need to make the image of size 16*16, so we need to put each 4 pixels in 1 pixel only in image2
+            for(int i = 0; i < SIZE/4+1; i++){
+                for(int j = 0; j< SIZE/4+1; j++){
+                    image2[i][j] = image[i*4][j*4];
+                }
+            }
     }
 }
