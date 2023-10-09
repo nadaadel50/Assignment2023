@@ -1,11 +1,11 @@
-// CS213-2023-20221179-20221042-        -A1-Part1.cpp
+// CS213-2023-20221179-20221042-20220130-A1-Part1.cpp
 
 // FCAI - OOP Programming - 2023 - Assignment 1
-// Program Name: CS213-2023-20221179-        -        -A1-Part1.cpp
+// Program Name: CS213-2023-20221179-20221042-20220130-A1-Part1.cpp
 // Last Modification Date : 10/10/2023
 // Author1 and ID : Nada Adel Ahmed Nagy (20221179)
-// Author2 and ID : Touka Atef El-Sayed Abu-ElAzm    ( 20221042 )
-// Author3 and ID :                      (        )
+// Author2 and ID : Touka Atef El-Sayed Abu-ElAzm (20221042)
+// Author3 and ID : Rana Ibrahim Bassiouny (20220130)
 // Teaching Assistant:
 // Purpose: To learn how to dealing with gray images using C++
 
@@ -130,11 +130,9 @@ void doSomethingForImage() {
     else if(choice == 4){
         // Flip images
         // We need to swap pixels to flip the image by using this algorithm
-        cout << "Please, Enter you want to flip the image Horizontally or Vertically: " << endl;
-        cout << "1- H "<< endl;
-        cout << "2- V "<< endl;
+        cout << "Flip (h)orizontally or (v)ertically? " << endl;
         char direction; cin >> direction;
-        if(direction == 'H'){
+        if(direction == 'H' || direction == 'h'){
             // We figure out from drawing a matrix that (i) doesn't change but (j) changes with this algorithm
             for(int i = 0; i < SIZE; i++){
                 for(int j = 0; j < SIZE/2+1; j++){
@@ -144,7 +142,7 @@ void doSomethingForImage() {
                 }
             }
         }
-        else if(direction == 'V'){
+        else if(direction == 'V' || direction == 'v'){
             // We figure out from drawing a matrix that (j) doesn't change but (i) changes with this algorithm
             for(int i = 0; i < SIZE/2+1; i++) {
                 for (int j = 0; j < SIZE; j++) {
@@ -198,14 +196,14 @@ void doSomethingForImage() {
         cout << "Do you want to (d)arken or (l)ighten? ";
         char dl; cin >> dl;
         // Darken the image by 50% all we need is to divide each pixel by two
-        if (dl == 'd'){
+        if (dl == 'd' || dl == 'D'){
             for(int i = 0; i < SIZE; i++){
                 for(int j = 0; j < SIZE; j++){
                     image[i][j] /= 2;
                 }
             }
         }
-        else if(dl == 'l'){
+        else if(dl == 'l' || dl == 'L'){
             // To lighten the image we can't to multiply each pixel by 1.5 cause some pixels might by more than 255 or some pixels might equal zero
             // We can add 50% of the difference between (255) and image[i][j] , so we get rid of the problem
             for(int i = 0; i < SIZE; i++){
