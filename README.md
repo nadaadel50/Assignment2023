@@ -213,7 +213,7 @@ void doSomethingForImage() {
             }
         }
     }
-    else if(choice == 9){
+    else if(choice == 7){
         // Shrink image
         cout << "Shrink to (1/2), (1/3) or (1/4)? " << endl;
         string shrink; cin >> shrink;
