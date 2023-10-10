@@ -4,8 +4,8 @@
 // Program Name: CS213-2023-20221179-20221042-20220130-A1-Part1.cpp
 // Last Modification Date : 10/10/2023
 // Author1 and ID : Nada Adel Ahmed Nagy          (20221179) Email: dew.sara2004@gmail.com
-// Author2 and ID : Touka Atef El-Sayed Abu-ElAzm (20221042) Email:
-// Author3 and ID : Rana Ibrahim Bassiouny        (20220130) Email:
+// Author2 and ID : Touka Atef El-Sayed Abu-ElAzm (20221042) Email: toukaatef48@gmail.com
+// Author3 and ID : Rana Ibrahim Bassiouny        (20220130) Email: roniibassiouny@gmail.com
 // Teaching Assistant:
 // Purpose: To learn how to deal with gray images using C++
 
