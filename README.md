@@ -21,8 +21,10 @@ unsigned char image[SIZE][SIZE];
 unsigned char image2[SIZE][SIZE];
 unsigned char image_f[SIZE][SIZE];
 // To enter the number of the filter you want to use
-int choice;
+char choice;
 int degree;
+int dx[] = {-1, 1, 0, 0 , -1, -1, 1, 1};
+int dy[] = {0, 0, -1, 1, -1, 1, -1, 1};
 void loadImage ();
 void saveImage ();
 void doSomethingForImage ();
@@ -31,7 +33,7 @@ int main()
 {
     loadImage();
     doSomethingForImage();
-    while(choice != 0){
+    while(choice != '0'){
         // Selecting the filter
         cout << "Please, select a filter to apply " << endl;
         cout << "1- Black & White Filter" << endl;
@@ -40,9 +42,17 @@ int main()
         cout << "4- Flip Filter" << endl;
         cout << "5- Rotate Filter" << endl;
         cout << "6- Darken & Lighten Filter" << endl;
+        cout << "7- Detect Image Edges" << endl;
+        cout << "8- Enlarge Image" << endl;
         cout << "9- Shrink Image" << endl;
+        cout << "a- Mirror 1/2 Image" << endl;
+        cout << "b- Shuffle Image" << endl;
+        cout << "c- Blur Image" << endl;
+        cout << "d- Crop Image" << endl;
+        cout << "e- skew Image Right" << endl;
+        cout << "f- skew Image Up" << endl;
         cin >> choice;
-        if(choice == 3){
+        if(choice == '3'){
             char image2File[100];
             // To take the second image to merge it with the first picture
             cout << "Enter the source image file name of the second image:";
@@ -74,12 +84,20 @@ void loadImage () {
     cout << "4- Flip Filter" << endl;
     cout << "5- Rotate Filter" << endl;
     cout << "6- Darken & Lighten Filter" << endl;
+    cout << "7- Detect Image Edges" << endl;
+    cout << "8- Enlarge Image" << endl;
     cout << "9- Shrink Image" << endl;
+    cout << "a- Mirror 1/2 Image" << endl;
+    cout << "b- Shuffle Image" << endl;
+    cout << "c- Blur Image" << endl;
+    cout << "d- Crop Image" << endl;
+    cout << "e- skew Image Right" << endl;
+    cout << "f- skew Image Up" << endl;
     cin >> choice;
     // Add to it .bmp extension and load image
     strcat (imageFileName, ".bmp");
     readGSBMP(imageFileName, image);
-    if(choice == 3){
+    if(choice == '3'){
         char image2File[100];
         // To take the second image to merge it with the first picture
         cout << "Enter the source image file name of the second image:";
@@ -104,7 +122,7 @@ void saveImage () {
 
 //_________________________________________
 void doSomethingForImage() {
-    if(choice == 1){
+    if(choice == '1'){
         // Black and white image
         // We need to change every pixel that is greater than 127 to 255 to make it white and if it is
         // less than 127 we change it to 0 to make it black
@@ -121,7 +139,7 @@ void doSomethingForImage() {
             }
         }
     }
-    else if(choice == 2){
+    else if(choice == '2'){
         // Invert image
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j < SIZE; j++){
@@ -130,7 +148,7 @@ void doSomethingForImage() {
             }
         }
     }
-    else if(choice == 3){
+    else if(choice == '3'){
         // Merge images
         // We need to get the average to get the merged picture from image1 and image2
         for(int i = 0; i < SIZE; i++){
@@ -140,7 +158,7 @@ void doSomethingForImage() {
             }
         }
     }
-    else if(choice == 4){
+    else if(choice == '4'){
         // Flip images
         // We need to swap pixels to flip the image by using this algorithm
         cout << "Flip (h)orizontally or (v)ertically? " << endl;
@@ -178,7 +196,7 @@ void doSomethingForImage() {
             }
         }
     }
-    else if(choice == 5){
+    else if(choice == '5'){
         cout << "Rotate (90), (180) or (270) degrees: ";
         cin >> degree;
         if(degree == 90){
@@ -243,7 +261,7 @@ void doSomethingForImage() {
             }
         }
     }
-    else if(choice == 6){
+    else if(choice == '6'){
         cout << "Do you want to (d)arken or (l)ighten? ";
         char dl; cin >> dl;
         // Darken the image by 50% all we need is to divide each pixel by two
@@ -268,7 +286,7 @@ void doSomethingForImage() {
             }
         }
     }
-    else if(choice == 9){
+    else if(choice == '9'){
         // Shrink image
         cout << "Shrink to (1/2), (1/3) or (1/4)? " << endl;
         string shrink; cin >> shrink;
@@ -305,4 +323,28 @@ void doSomethingForImage() {
                 }
             }
     }
+    else if(choice == 'c'){
+        // Blur the image
+        // We will use a directional array to calculate the average of the neighbours pixels
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j < SIZE; j++){
+                int sum = 0;
+                for(int r = 0; r < 8; r++){
+                    int next_x, next_y;
+                    next_x = i + dx[r];
+                    next_y = j + dy[r];
+                    sum += image[next_x][next_y];
+                }
+                image_f[i][j] = sum / 8;
+            }
+        }
+        // To put the new image after using the filter in the variable image
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j < SIZE; j++){
+                image[i][j] = image_f[i][j];
+            }
+        }
+    }
 }
+
+
