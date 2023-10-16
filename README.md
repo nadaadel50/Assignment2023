@@ -286,6 +286,41 @@ void doSomethingForImage() {
             }
         }
     }
+    else if(choice == '8'){
+        cout << "choose the number of the quarter that you want to enlarge :  " << endl;
+        cout << "1- first quarter " << endl;
+        cout << "2- second quarter " << endl;
+        cout << "3- third quarter " << endl;
+        cout << "4- fourth quarter " << endl;
+        int q;           //the idea of the enlarge is to make every pixel into 4 pixels( the original , the next to it,the below it
+        cin >> q;         // and the below of the next pixel )
+        if (q == 1) {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {      //we divide both i and j over 2
+                    image_f[i][j] = image[i / 2][j / 2];  // to make 2 pixels in the same row and 2 pixels in the same column
+                }                                          //are similar to enlarge the first quarter
+            }
+        } else if (q == 2) {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    image_f[i][j] = image[i / 2][(j / 2) + 127];     // add 127 to j/2 to reach the second quarter
+                                                                    //to make 2 pixels in the same row and 2 pixels in the same column
+                }                                                   //are similar to enlarge the second quarter
+            }
+        } else if (q == 3) {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    image_f[i][j] = image[(i / 2) + 127][j / 2];  // add 127 to i/2 to reach the third quarter
+                }
+            }
+        } else {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    image_f[i][j] = image[(i / 2) + 127][(j / 2) + 127];    // add 127 to i/2 and j/2 to reach the fourth quarter
+                }
+            }
+        }
+    }
     else if(choice == '9'){
         // Shrink image
         cout << "Shrink to (1/2), (1/3) or (1/4)? " << endl;
@@ -323,6 +358,65 @@ void doSomethingForImage() {
                 }
             }
     }
+    else if(choice == 'b'){
+        cout<<"choose the number of order that you want : "<<endl;
+        cout<<"1-    4 3 2 1 "<<endl;
+        cout<<"2-    3 1 4 2 "<<endl;
+        int order;
+        cin>>order;
+
+        if (order == 1) {
+            for (int i = 0; i < (SIZE / 2) + 1; i++) {       // we loop in the first quarter of the new image
+                for (int j = 0; j < (SIZE / 2) + 1; j++) {  // we need it to be the same as the  fourth quarter
+                    image_f[i][j] = image[i + 127][j + 127];   //we add 127 to both i and j to reach the fourth quarter
+                }                                              // in the original image
+            }
+            for (int i = 0; i < (SIZE / 2) + 1; i++) {         // we loop in the second quarter of the new image
+                for (int j = (SIZE / 2) + 1; j < SIZE; j++) {   // we need it to be the same as the third quarter
+                    image_f[i][j] = image[i + 127][j - (SIZE / 2)];  //we add 127 to i and loop from 0 to 127 for j
+                                                                     // to reach the third quarter in the original image
+                }
+            }
+            for (int i = (SIZE / 2) + 1; i < SIZE; i++) {    // we loop in the third quarter of the new image
+                for (int j = 0; j < (SIZE / 2) + 1; j++) {   // we need it to be the same as the second quarter
+                    image_f[i][j] = image[i - (SIZE / 2)][j + 127];   //we add 127 to j and loop from 0 to 127 for i
+                                                                     // to reach the second quarter in the original image
+                }
+            }
+            for (int i = (SIZE / 2) + 1; i < SIZE; i++) {     // we loop in the fourth quarter of the new image
+                for (int j = (SIZE / 2) + 1; j < SIZE; j++) {  // we need it to be the same as the first quarter
+                    image_f[i][j] = image[i - (SIZE / 2)][j - (SIZE / 2)];  //we loop from 0 to 127 for j and loop from 0 to 127 for i
+                                                                        // to reach the first quarter in the original image
+                }
+            }
+        } else {
+            for (int i = 0; i < (SIZE / 2) + 1; i++) {           // we loop in the first quarter of the new image
+                for (int j = 0; j < (SIZE / 2) + 1; j++) {       // we need it to be the same as the third quarter
+                    image_f[i][j] = image[i + (SIZE / 2)][j];    //we add 127 (SIZE/2) to i and loop from 0 to 127 for j
+                                                                 //to reach the third quarter in the original image
+                }
+            }
+            for (int i = 0; i < (SIZE / 2) + 1; i++) {          // we loop in the second quarter of the new image
+                for (int j = (SIZE / 2) + 1; j < SIZE; j++) {    // we need it to be the same as the first quarter
+                                                                 //we  loop from 0 to 127 for i and loop from 0 to 127 for j
+                    image_f[i][j] = image[i][j - (SIZE / 2)];     //to reach the first quarter in the original image
+
+                }
+            }
+            for (int i = (SIZE / 2) + 1; i < SIZE; i++) {      // we loop in the third quarter of the new image
+                for (int j = 0; j < (SIZE / 2) + 1; j++) {      // we need it to be the same as the fourth quarter
+                    image_f[i][j] = image[i][j + (SIZE / 2)];   //we  loop from 127 to SIZE for i and loop from 0 to 127 for j
+                }                                                //to reach the fourth quarter in the original image
+            }
+            for (int i = (SIZE / 2) + 1; i < SIZE; i++) {        // we loop in the fourth quarter of the new image
+                for (int j = (SIZE / 2) + 1; j < SIZE; j++) {    // we need it to be the same as the second quarter
+                    image_f[i][j] = image[i - (SIZE / 2)][j];     //we  loop from 0 to 127 for i and loop from 127 to SIZE for j
+                                                                  //to reach the second quarter in the original image
+                }
+            }
+        }
+
+    }
     else if(choice == 'c'){
         // Blur the image
         // We will use a directional array to calculate the average of the neighbours pixels
@@ -348,3 +442,16 @@ void doSomethingForImage() {
 }
 
 
+
+       
+    
+  
+
+
+   
+  
+       
+           
+           
+    
+               
