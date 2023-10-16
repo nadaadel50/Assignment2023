@@ -439,19 +439,47 @@ void doSomethingForImage() {
             }
         }
     }
+    else if(choice == 'e'){
+        cout<<"enter the degree of skew : "<<endl;
+        double rad;             //the degree in radius
+        cin>>rad;
+        rad=(rad*22)/(7*180);  //change from radius into degree
+        
+        double zz=256/(1+(1/tan(rad)));    //number of pixels of the compressed image
+        double move=SIZE-zz;                  //number of pixels that are white before the compressed image
+        double step=move/SIZE;                //the difference between the number of white pixels in each row
+        unsigned char img_skew[SIZE][SIZE+(int)move];
+        unsigned char img_shrink[SIZE][SIZE];
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE ; j++){
+                img_shrink[i][j] =255 ;  //making the background white
+                img_skew[i][j]=255;
+            }
+        }
+
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE; j++){
+                img_shrink[i][(j*(int)zz)/SIZE] = image[i][j]  ;   //shrink the image by multiplying j by the number 
+            }                                                      //of pixels of the compressed image over SIZE
+        }
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE ; j++){
+                img_skew[i][j+(int)move] =img_shrink[i][j];   //skew the image by skip the white pixels and put the compressed image
+            }
+            move-=step;                                      //because of number of white pixels decline in each row to 
+                                                              //form the skewed image
+        }
+
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE ; j++){
+                image_f[i][j] =img_skew[i][j];   //save the skewed image into image_f
+            }
+        }
+
+
+    }
 }
 
 
 
-       
-    
-  
-
-
    
-  
-       
-           
-           
-    
-               
