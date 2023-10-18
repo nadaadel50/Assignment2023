@@ -21,7 +21,7 @@ unsigned char image[SIZE][SIZE];
 unsigned char image2[SIZE][SIZE];
 unsigned char image_f[SIZE][SIZE];
 // To enter the number of the filter you want to use
-char choice;
+char choice , option;
 int degree;
 int dx[] = {-1, 1, 0, 0 , -1, -1, 1, 1};
 int dy[] = {0, 0, -1, 1, -1, 1, -1, 1};
@@ -35,7 +35,7 @@ int main()
     doSomethingForImage();
     while(choice != '0'){
         // Selecting the filter
-        cout << "Please, select a filter to apply " << endl;
+        cout << "Please, select a filter to apply or 0 to exit" << endl;
         cout << "1- Black & White Filter" << endl;
         cout << "2- Invert Filter" << endl;
         cout << "3- Merge Filter" << endl;
@@ -51,6 +51,7 @@ int main()
         cout << "d- Crop Image" << endl;
         cout << "e- skew Image Right" << endl;
         cout << "f- skew Image Up" << endl;
+        cout << "0- Exit " << endl;
         cin >> choice;
         if(choice == '3'){
             char image2File[100];
@@ -77,7 +78,7 @@ void loadImage () {
     cout << "Enter the source image file name: ";
     cin >> imageFileName;
     // Selecting the filter
-    cout << "Please, select a filter to apply " << endl;
+    cout << "Please, select a filter to apply or 0 to exit" << endl;
     cout << "1- Black & White Filter" << endl;
     cout << "2- Invert Filter" << endl;
     cout << "3- Merge Filter" << endl;
@@ -93,6 +94,7 @@ void loadImage () {
     cout << "d- Crop Image" << endl;
     cout << "e- skew Image Right" << endl;
     cout << "f- skew Image Up" << endl;
+    cout << "0- Exit " << endl;
     cin >> choice;
     // Add to it .bmp extension and load image
     strcat (imageFileName, ".bmp");
@@ -286,13 +288,39 @@ void doSomethingForImage() {
             }
         }
     }
+    else if(choice == '7'){
+        //detect image edges
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j< SIZE; j++) {
+                //we compare each pixel with the one besides it to check they are different from each other in lighting
+                //if true we change the pixel to black to be on the image edge
+                if ((image[i][j] > 127 && image[i][j+1]<127) || (image[i][j] < 127 && image[i][j+1]>127) ){
+                    image[i][j] = 0;
+                }
+                //compare each pixel with the one below it to check they are different from each other in lighting
+                // if true we change the pixel to black (to be on the image edge)
+                else if((image[i][j] > 127 && image[i+1][j]<127) || (image[i][j] < 127 && image[i+1][j]>127)){
+                    image[i][j] = 0;
+                }
+                // if false we change the pixel to white (to be outside the image edge)
+                else
+                    image[i][j] = 255;
+            }
+        }
+        // To put the new image after using the filter in the variable image
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j < SIZE; j++){
+                image[i][j] = image_f[i][j];
+            }
+        }
+    }
     else if(choice == '8'){
         cout << "choose the number of the quarter that you want to enlarge :  " << endl;
         cout << "1- first quarter " << endl;
         cout << "2- second quarter " << endl;
         cout << "3- third quarter " << endl;
         cout << "4- fourth quarter " << endl;
-        int q;           //the idea of the enlarge is to make every pixel into 4 pixels( the original , the next to it,the below it
+        int q;           //the idea of enlarge is to make every pixel into 4 pixels( the original , the next to it,the below it
         cin >> q;         // and the below of the next pixel )
         if (q == 1) {
             for (int i = 0; i < SIZE; i++) {
@@ -304,7 +332,7 @@ void doSomethingForImage() {
             for (int i = 0; i < SIZE; i++) {
                 for (int j = 0; j < SIZE; j++) {
                     image_f[i][j] = image[i / 2][(j / 2) + 127];     // add 127 to j/2 to reach the second quarter
-                                                                    //to make 2 pixels in the same row and 2 pixels in the same column
+                    //to make 2 pixels in the same row and 2 pixels in the same column
                 }                                                   //are similar to enlarge the second quarter
             }
         } else if (q == 3) {
@@ -318,6 +346,12 @@ void doSomethingForImage() {
                 for (int j = 0; j < SIZE; j++) {
                     image_f[i][j] = image[(i / 2) + 127][(j / 2) + 127];    // add 127 to i/2 and j/2 to reach the fourth quarter
                 }
+            }
+        }
+        // To put the new image after using the filter in the variable image
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j < SIZE; j++){
+                image[i][j] = image_f[i][j];
             }
         }
     }
@@ -358,7 +392,60 @@ void doSomethingForImage() {
                 }
             }
     }
+    else if(choice =='a'){
+        //mirror image
+        cout<<"Please,select an option to Mirror 1/2 an image "<< endl;
+        cout<<"a- Left"<< endl;
+        cout<<"b- Right"<< endl;
+        cout<<"c- Upper"<< endl;
+        cout<<"d- Lower"<< endl;
+        cin>>option;
+        //mirror the image 1/2 left
+        if(option=='a'){
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j< SIZE/2+1; j++) {
+                    image_f[i][j]=image[i][j];
+                    image_f[i][SIZE-1-j]=image[i][j];
+                }
+            }
+        }
+        //mirror the image 1/2 right
+        else if(option=='b'){
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j< SIZE; j++) {
+                    image_f[i][j]=image[i][j];
+                    image_f[i][SIZE-1-j]=image[i][j];
+                }
+            }
+        }
+        //mirror the image 1/2 upper
+        else if(option=='c'){
+            for (int i = 0; i < SIZE/2; i++) {
+                for (int j = 0; j< SIZE; j++) {
+                    image_f[i][j]=image[i][j];
+                    image_f[SIZE-1-i][j]=image[i][j];
+                }
+            }
+        }
+        //mirror the image 1/2 lower
+        else{
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j< SIZE; j++) {
+                    image_f[i][j]=image[i][j];
+                    image_f[SIZE-1-i][j]=image[i][j];
+                }
+            }
+        }
+        // To put the new image after using the filter in the variable image
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j< SIZE; j++) {
+                image[i][j]=image_f[i][j];
+            }
+        }
+
+    }
     else if(choice == 'b'){
+        /*
         cout<<"choose the number of order that you want : "<<endl;
         cout<<"1-    4 3 2 1 "<<endl;
         cout<<"2-    3 1 4 2 "<<endl;
@@ -374,31 +461,31 @@ void doSomethingForImage() {
             for (int i = 0; i < (SIZE / 2) + 1; i++) {         // we loop in the second quarter of the new image
                 for (int j = (SIZE / 2) + 1; j < SIZE; j++) {   // we need it to be the same as the third quarter
                     image_f[i][j] = image[i + 127][j - (SIZE / 2)];  //we add 127 to i and loop from 0 to 127 for j
-                                                                     // to reach the third quarter in the original image
+                    // to reach the third quarter in the original image
                 }
             }
             for (int i = (SIZE / 2) + 1; i < SIZE; i++) {    // we loop in the third quarter of the new image
                 for (int j = 0; j < (SIZE / 2) + 1; j++) {   // we need it to be the same as the second quarter
                     image_f[i][j] = image[i - (SIZE / 2)][j + 127];   //we add 127 to j and loop from 0 to 127 for i
-                                                                     // to reach the second quarter in the original image
+                    // to reach the second quarter in the original image
                 }
             }
             for (int i = (SIZE / 2) + 1; i < SIZE; i++) {     // we loop in the fourth quarter of the new image
                 for (int j = (SIZE / 2) + 1; j < SIZE; j++) {  // we need it to be the same as the first quarter
                     image_f[i][j] = image[i - (SIZE / 2)][j - (SIZE / 2)];  //we loop from 0 to 127 for j and loop from 0 to 127 for i
-                                                                        // to reach the first quarter in the original image
+                    // to reach the first quarter in the original image
                 }
             }
         } else {
             for (int i = 0; i < (SIZE / 2) + 1; i++) {           // we loop in the first quarter of the new image
                 for (int j = 0; j < (SIZE / 2) + 1; j++) {       // we need it to be the same as the third quarter
                     image_f[i][j] = image[i + (SIZE / 2)][j];    //we add 127 (SIZE/2) to i and loop from 0 to 127 for j
-                                                                 //to reach the third quarter in the original image
+                    //to reach the third quarter in the original image
                 }
             }
             for (int i = 0; i < (SIZE / 2) + 1; i++) {          // we loop in the second quarter of the new image
                 for (int j = (SIZE / 2) + 1; j < SIZE; j++) {    // we need it to be the same as the first quarter
-                                                                 //we  loop from 0 to 127 for i and loop from 0 to 127 for j
+                    //we  loop from 0 to 127 for i and loop from 0 to 127 for j
                     image_f[i][j] = image[i][j - (SIZE / 2)];     //to reach the first quarter in the original image
 
                 }
@@ -411,40 +498,70 @@ void doSomethingForImage() {
             for (int i = (SIZE / 2) + 1; i < SIZE; i++) {        // we loop in the fourth quarter of the new image
                 for (int j = (SIZE / 2) + 1; j < SIZE; j++) {    // we need it to be the same as the second quarter
                     image_f[i][j] = image[i - (SIZE / 2)][j];     //we  loop from 0 to 127 for i and loop from 127 to SIZE for j
-                                                                  //to reach the second quarter in the original image
+                    //to reach the second quarter in the original image
                 }
             }
         }
+         */
 
     }
     else if(choice == 'c'){
         // Blur the image
         // We will use a directional array to calculate the average of the neighbours pixels
-        for(int i = 0; i < SIZE; i++){
-            for(int j = 0; j < SIZE; j++){
-                int sum = 0;
-                for(int r = 0; r < 8; r++){
-                    int next_x, next_y;
-                    next_x = i + dx[r];
-                    next_y = j + dy[r];
-                    sum += image[next_x][next_y];
+        // To increase the percentage of the blur in the image, we need to loop more than once
+        for(int l = 0; l < 5; l++) {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    int sum = 0;
+                    for (int r = 0; r < 8; r++) {
+                        int next_x, next_y;
+                        next_x = i + dx[r];
+                        next_y = j + dy[r];
+                        sum += image[next_x][next_y];
+                    }
+                    image_f[i][j] = sum / 8;
                 }
-                image_f[i][j] = sum / 8;
+            }
+            // To put the new image after using the filter in the variable image
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    image[i][j] = image_f[i][j];
+                }
+            }
+        }
+    }
+    else if(choice =='d'){
+        //crop image
+        int x,y,l,w;
+        cout<<"please enter x and y positions\n";
+        cin>>x>>y;
+        cout<<"please enter length and width\n";
+        cin>>l>>w;
+        // make new white image
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j< SIZE; j++) {
+                image_f[i][j]=255;
+            }
+        }
+        //cutting a square of length and width l, w from position x,y from an image to be put in the white image
+        for (int i = x; i < l+x; i++) {
+            for (int j = y; j<w+y ; j++) {
+                image_f[i][j]=image[i][j];
             }
         }
         // To put the new image after using the filter in the variable image
-        for(int i = 0; i < SIZE; i++){
-            for(int j = 0; j < SIZE; j++){
-                image[i][j] = image_f[i][j];
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j<SIZE ; j++) {
+                image[i][j]=image_f[i][j];
             }
         }
     }
     else if(choice == 'e'){
-        cout<<"enter the degree of skew : "<<endl;
+        cout<<"Enter the degree of skew to skew it to the right : "<<endl;
         double rad;             //the degree in radius
         cin>>rad;
         rad=(rad*22)/(7*180);  //change from radius into degree
-        
+
         double zz=256/(1+(1/tan(rad)));    //number of pixels of the compressed image
         double move=SIZE-zz;                  //number of pixels that are white before the compressed image
         double step=move/SIZE;                //the difference between the number of white pixels in each row
@@ -452,22 +569,21 @@ void doSomethingForImage() {
         unsigned char img_shrink[SIZE][SIZE];
         for(int i = 0; i <SIZE ; i++){
             for(int j = 0; j <SIZE ; j++){
-                img_shrink[i][j] =255 ;  //making the background white
-                img_skew[i][j]=255;
+                img_shrink[i][j] = 255 ;  //making the background white
+                img_skew[i][j] = 255;
             }
         }
-
         for(int i = 0; i <SIZE ; i++){
             for(int j = 0; j <SIZE; j++){
-                img_shrink[i][(j*(int)zz)/SIZE] = image[i][j]  ;   //shrink the image by multiplying j by the number 
+                img_shrink[i][(j*(int)zz)/SIZE] = image[i][j]  ;   //shrink the image by multiplying j by the number
             }                                                      //of pixels of the compressed image over SIZE
         }
         for(int i = 0; i <SIZE ; i++){
             for(int j = 0; j <SIZE ; j++){
                 img_skew[i][j+(int)move] =img_shrink[i][j];   //skew the image by skip the white pixels and put the compressed image
             }
-            move-=step;                                      //because of number of white pixels decline in each row to 
-                                                              //form the skewed image
+            move -= step;                                      //because of number of white pixels decline in each row to
+            //form the skewed image
         }
 
         for(int i = 0; i <SIZE ; i++){
@@ -475,11 +591,8 @@ void doSomethingForImage() {
                 image_f[i][j] =img_skew[i][j];   //save the skewed image into image_f
             }
         }
-
-
     }
 }
 
 
 
-   
