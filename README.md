@@ -297,12 +297,12 @@ void doSomethingForImage() {
                 if ((image[i][j] > 127 && image[i][j+1]<127) || (image[i][j] < 127 && image[i][j+1]>127) ){
                     image[i][j] = 0;
                 }
-                //compare each pixel with the one below it to check they are different from each other in lighting
-                // if true we change the pixel to black (to be on the image edge)
+                    //compare each pixel with the one below it to check they are different from each other in lighting
+                    // if true we change the pixel to black (to be on the image edge)
                 else if((image[i][j] > 127 && image[i+1][j]<127) || (image[i][j] < 127 && image[i+1][j]>127)){
                     image[i][j] = 0;
                 }
-                // if false we change the pixel to white (to be outside the image edge)
+                    // if false we change the pixel to white (to be outside the image edge)
                 else
                     image[i][j] = 255;
             }
@@ -409,7 +409,7 @@ void doSomethingForImage() {
                 }
             }
         }
-        //mirror the image 1/2 right
+            //mirror the image 1/2 right
         else if(option=='b'){
             for (int i = 0; i < SIZE; i++) {
                 for (int j = 0; j< SIZE; j++) {
@@ -418,7 +418,7 @@ void doSomethingForImage() {
                 }
             }
         }
-        //mirror the image 1/2 upper
+            //mirror the image 1/2 upper
         else if(option=='c'){
             for (int i = 0; i < SIZE/2; i++) {
                 for (int j = 0; j< SIZE; j++) {
@@ -427,7 +427,7 @@ void doSomethingForImage() {
                 }
             }
         }
-        //mirror the image 1/2 lower
+            //mirror the image 1/2 lower
         else{
             for (int i = 0; i < SIZE; i++) {
                 for (int j = 0; j< SIZE; j++) {
@@ -560,8 +560,8 @@ void doSomethingForImage() {
         cout<<"Enter the degree of skew to skew it to the right : "<<endl;
         double rad;             //the degree in radius
         cin>>rad;
+        rad = 90 - rad;
         rad=(rad*22)/(7*180);  //change from radius into degree
-
         double zz=256/(1+(1/tan(rad)));    //number of pixels of the compressed image
         double move=SIZE-zz;                  //number of pixels that are white before the compressed image
         double step=move/SIZE;                //the difference between the number of white pixels in each row
@@ -593,6 +593,9 @@ void doSomethingForImage() {
         }
     }
 }
+
+
+
 
 
 
