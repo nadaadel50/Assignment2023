@@ -1,0 +1,460 @@
+// CS213-2023-20221179-20221042-20220130-A1-Part1.cpp
+
+// FCAI - OOP Programming - 2023 - Assignment 1
+// Program Name: CS213-2023-20221179-20221042-20220130-A1-Part1.cpp
+// Last Modification Date : 10/10/2023
+// Author1 and ID : Nada Adel Ahmed Nagy          (20221179) Email: dew.sara2004@gmail.com
+// Author2 and ID : Touka Atef El-Sayed Abu-ElAzm (20221042) Email: toukaatef48@gmail.com
+// Author3 and ID : Rana Ibrahim Bassiouny        (20220130) Email: roniibassiouny@gmail.com
+// Teaching Assistant:
+// Purpose: To learn how to deal with gray images using C++
+
+#include <iostream>
+#include <fstream>
+#include <cstring>
+#include <cmath>
+#include "bmplib.cpp"
+
+using namespace std;
+// Creating 3D arrays
+unsigned char image[SIZE][SIZE][RGB];
+unsigned char image2[SIZE][SIZE][RGB];
+unsigned char image_f[SIZE][SIZE][RGB];
+// To enter the number of the filter you want to use
+char choice;
+int degree;
+int dx[] = {-1, 1, 0, 0 , -1, -1, 1, 1};
+int dy[] = {0, 0, -1, 1, -1, 1, -1, 1};
+void loadImage ();
+void saveImage ();
+void doSomethingForImage ();
+
+int main()
+{
+    loadImage();
+    doSomethingForImage();
+    while(choice != '0'){
+        // Selecting the filter
+        cout << "Please, select a filter to apply " << endl;
+        cout << "1- Black & White Filter" << endl;
+        cout << "2- Invert Filter" << endl;
+        cout << "3- Merge Filter" << endl;
+        cout << "4- Flip Filter" << endl;
+        cout << "5- Rotate Filter" << endl;
+        cout << "6- Darken & Lighten Filter" << endl;
+        cout << "7- Detect Image Edges" << endl;
+        cout << "8- Enlarge Image" << endl;
+        cout << "9- Shrink Image" << endl;
+        cout << "a- Mirror 1/2 Image" << endl;
+        cout << "b- Shuffle Image" << endl;
+        cout << "c- Blur Image" << endl;
+        cout << "d- Crop Image" << endl;
+        cout << "e- skew Image Right" << endl;
+        cout << "f- skew Image Up" << endl;
+        cin >> choice;
+        if(choice == '3'){
+            char image2File[100];
+            // To take the second image to merge it with the first picture
+            cout << "Enter the source image file name of the second image:";
+            cin >> image2File;
+            // Add to it .bmp extension and load image
+            strcat (image2File, ".bmp");
+            readRGBBMP(image2File, image2);
+        }
+        if(choice != 0){
+            doSomethingForImage();
+        }
+    }
+    saveImage();
+
+    return 0;
+}
+
+//_________________________________________
+void loadImage () {
+    char imageFileName[100];
+    // Get gray scale image file name
+    cout << "Enter the source image file name: ";
+    cin >> imageFileName;
+    // Selecting the filter
+    cout << "Please, select a filter to apply " << endl;
+    cout << "1- Black & White Filter" << endl;
+    cout << "2- Invert Filter" << endl;
+    cout << "3- Merge Filter" << endl;
+    cout << "4- Flip Filter" << endl;
+    cout << "5- Rotate Filter" << endl;
+    cout << "6- Darken & Lighten Filter" << endl;
+    cout << "7- Detect Image Edges" << endl;
+    cout << "8- Enlarge Image" << endl;
+    cout << "9- Shrink Image" << endl;
+    cout << "a- Mirror 1/2 Image" << endl;
+    cout << "b- Shuffle Image" << endl;
+    cout << "c- Blur Image" << endl;
+    cout << "d- Crop Image" << endl;
+    cout << "e- skew Image Right" << endl;
+    cout << "f- skew Image Up" << endl;
+    cin >> choice;
+    // Add to it .bmp extension and load image
+    strcat (imageFileName, ".bmp");
+    readRGBBMP(imageFileName, image);
+    if(choice == '3'){
+        char image2File[100];
+        // To take the second image to merge it with the first picture
+        cout << "Enter the source image file name of the second image:";
+        cin >> image2File;
+        // Add to it .bmp extension and load image
+        strcat (image2File, ".bmp");
+        readRGBBMP(image2File, image2);
+    }
+}
+
+//_________________________________________
+void saveImage () {
+    char imageFileName[100];
+    // Get gray scale image target file name
+    cout << "Enter the target image file name:";
+    cin >> imageFileName;
+    // Add to it .bmp extension and load image
+    strcat (imageFileName, ".bmp");
+    writeRGBBMP(imageFileName, image_f);
+
+}
+
+//_________________________________________
+void doSomethingForImage() {
+    if (choice == '2') {
+        // Invert image
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                for (int k = 0; k < 3; k++) {
+                    image_f[i][j][k] = 255 - image[i][j][k];
+                    image[i][j][k] = image_f[i][j][k];
+                }
+            }
+        }
+    } else if (choice == '5') {
+        cout << "Rotate (90), (180) or (270) degrees: ";
+        cin >> degree;
+        if (degree == 90) {
+            // By drawing a matrix and rotate it with 90 degrees we figure out that we need to use a new 2D array (image2)
+            // Looping on each pixel and put them in the right place by using this algorithm
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[j][SIZE - 1 - i][k] = image[i][j][k];
+                    }
+                }
+            }
+            // To put the new image after using the filter in the variable image
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image[i][j][k] = image_f[i][j][k];
+                    }
+                }
+            }
+        } else if (degree == 180) {
+            // To make the image rotate by 180 degree all we need is only to flip it vertical then horizontal
+            // To flip it vertical
+            for (int i = 0; i < SIZE / 2 + 1; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        int tmp = image[i][j][k];
+                        image_f[i][j][k] = image[SIZE - 1 - i][j][k];
+                        image_f[SIZE - 1 - i][j][k] = tmp;
+                    }
+                }
+            }
+            // To put the new image after using the filter in the variable image
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image[i][j][k] = image_f[i][j][k];
+                    }
+                }
+            }
+            // To flip it horizontal
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE / 2 + 1; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        int tmp = image[i][j][k];
+                        image_f[i][j][k] = image[i][SIZE - 1 - j][k];
+                        image_f[i][SIZE - 1 - j][k] = tmp;
+                    }
+                }
+            }
+            // To put the new image after using the filter in the variable image
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image[i][j][k] = image_f[i][j][k];
+                    }
+                }
+            }
+        } else if (degree == 270) {
+            // By drawing a matrix and rotate it with 270 degrees we figure out that we need to use a new 2D array (image2)
+            // Looping on each pixel and put them in the right place by using this algorithm
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[SIZE - 1 - j][i][k] = image[i][j][k];
+                    }
+                }
+            }
+            // To put the new image after using the filter in the variable image
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image[i][j][k] = image_f[i][j][k];
+                    }
+                }
+            }
+        }
+    } else if (choice == '8') {
+        cout << "choose the number of the quarter that you want to enlarge :  " << endl;
+        cout << "1- first quarter " << endl;
+        cout << "2- second quarter " << endl;
+        cout << "3- third quarter " << endl;
+        cout << "4- fourth quarter " << endl;
+        int q;
+        cin >> q;
+        if (q == 1) {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i / 2][j / 2][k];
+                    }
+                }
+            }
+        } else if (q == 2) {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i / 2][(j / 2) + 127][k];
+                    }
+                }
+            }
+        } else if (q == 3) {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[(i / 2) + 127][j / 2][k];
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[(i / 2) + 127][(j / 2) + 127][k];
+                    }
+                }
+            }
+        }
+
+    }
+    else if(choice=='b'){
+        cout<<"write the order you want : "<<endl;
+        int first ,second,third,fourth;
+        cin>>first>>second>>third>>fourth;
+
+        if(first==1){
+            for (int i = 0; i < (SIZE / 2) + 1; i++) {       // we loop in the first quarter of the new image
+                for (int j = 0; j < (SIZE / 2) + 1; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i][j][k];
+                    }
+                }
+            }
+        }
+        else if(first==2){for (int i = 0; i < (SIZE / 2) + 1; i++) {       // we loop in the first quarter of the new image
+            for (int j = 0; j < (SIZE / 2) + 1; j++) {
+                for (int k = 0; k < 3; k++) {
+                    image_f[i][j][k] = image[i][j+127][k];
+                }
+            }
+        }
+
+        }
+        else if(first==3){
+            for (int i = 0; i < (SIZE / 2) + 1; i++) {       // we loop in the first quarter of the new image
+                for (int j = 0; j < (SIZE / 2) + 1; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i+127][j][k];
+                    }
+                }
+            }
+        }else{
+            for (int i = 0; i < (SIZE / 2) + 1; i++) {       // we loop in the first quarter of the new image
+                for (int j = 0; j < (SIZE / 2) + 1; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i+127][j+127][k];
+                    }
+                }
+            }
+        }
+
+        if(second==1){
+            for (int i = 0; i < (SIZE / 2) + 1; i++) {       // we loop in the first quarter of the new image
+                for (int j = (SIZE / 2) + 1; j < SIZE ; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i][j-127][k];
+                    }
+                }
+            }
+        }
+        else if(second==2){
+            for (int i = 0; i < (SIZE / 2) + 1; i++) {       // we loop in the first quarter of the new image
+                for (int j = (SIZE / 2) + 1; j < SIZE ; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i][j+127][k];
+                    }
+                }
+            }
+
+        }
+        else if(second==3){
+            for (int i = 0; i < (SIZE / 2) + 1; i++) {       // we loop in the first quarter of the new image
+                for (int j = (SIZE / 2) + 1; j < SIZE ; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i+127][j-127][k];
+                    }
+                }
+            }
+        }else{
+            for (int i = 0; i < (SIZE / 2) + 1; i++) {       // we loop in the first quarter of the new image
+                for (int j = (SIZE / 2) + 1; j <SIZE ; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i+127][j][k];
+                    }
+                }
+            }
+        }
+
+        if(third==1){
+            for (int i =(SIZE / 2) + 1; i<SIZE; i++) {       // we loop in the first quarter of the new image
+                for (int j = 0; j < (SIZE / 2) + 1 ; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i-127][j][k];
+                    }
+                }
+            }
+        }
+        else if(third==2){
+            for (int i =  (SIZE / 2) + 1 ; i<SIZE ;i++) {       // we loop in the first quarter of the new image
+                for (int j = 0; j < (SIZE / 2) + 1 ; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i-127][j+127][k];
+                    }
+                }
+            }
+
+        }
+        else if(third==3){
+            for (int i =  (SIZE / 2) + 1;i<SIZE; i++) {       // we loop in the first quarter of the new image
+                for (int j = 0; j < (SIZE / 2) + 1 ; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i][j][k];
+                    }
+                }
+            }
+        }else{
+            for (int i = (SIZE / 2) + 1;  i<SIZE ;i++) {       // we loop in the first quarter of the new image
+                for (int j =0; j <(SIZE / 2) + 1 ; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i][j+127][k];
+                    }
+                }
+            }
+        }
+
+        if(fourth==1){
+            for (int i =(SIZE / 2) + 1; i<SIZE; i++) {       // we loop in the first quarter of the new image
+                for (int j = (SIZE / 2) + 1;  j<SIZE ; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i-127][j-127][k];
+                    }
+                }
+            }
+        }
+        else if(fourth==2){
+            for (int i =  (SIZE / 2) + 1 ; i<SIZE ;i++) {       // we loop in the first quarter of the new image
+                for (int j = (SIZE / 2) + 1;  j<SIZE ; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i-127][j][k];
+                    }
+                }
+            }
+
+        }
+        else if(fourth==3){
+            for (int i =  (SIZE / 2) + 1;i<SIZE; i++) {       // we loop in the first quarter of the new image
+                for (int j = (SIZE / 2) + 1;  j<SIZE ;j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i][j-127][k];
+                    }
+                }
+            }
+        }else{
+            for (int i = (SIZE / 2) + 1;  i<SIZE ;i++) {       // we loop in the first quarter of the new image
+                for (int j = (SIZE / 2) + 1;  j<SIZE ; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i][j][k];
+                    }
+                }
+            }
+        }
+
+
+
+
+    }
+    else if(choice=='e'){
+        cout<<"enter the degree: "<<endl;
+        double rad;             //the degree in radius
+        cin>>rad;
+        rad = 90 - rad;
+        rad=(rad*22)/(7*180);  //change from radius into degree
+        double zz=256/(1+(1/tan(rad)));    //number of pixels of the compressed image
+        double move=SIZE-zz;                  //number of pixels that are white before the compressed image
+        double step=move/SIZE;                //the difference between the number of white pixels in each row
+        unsigned char img_skew[SIZE][SIZE+(int)move][RGB];
+        unsigned char img_shrink[SIZE][SIZE][RGB];
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE ; j++){
+                for(int k= 0; k<3 ; k++) {
+                    img_shrink[i][j][k] = 255;  //making the background white
+                    img_skew[i][j][k] = 255;
+                }
+            }
+        }
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE; j++){
+                for(int k= 0; k<3 ; k++) {
+                    img_shrink[i][(j * (int) zz) /SIZE][k] = image[i][j][k];   //shrink the image by multiplying j by the number
+                }
+            }                                                      //of pixels of the compressed image over SIZE
+        }
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE ; j++){
+                for(int k= 0; k<3 ; k++) {
+                    img_skew[i][j +(int) move][k] = img_shrink[i][j][k];   //skew the image by skip the white pixels and put the compressed image
+                }
+            }
+            move -= step;                                      //because of number of white pixels decline in each row to
+            //form the skewed image
+        }
+
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE ; j++){
+                for(int k= 0; k<3 ; k++) {
+                    image_f[i][j][k] = img_skew[i][j][k];   //save the skewed image into image_f
+                }
+            }
+        }
+
+    }
+}
+
+
+
