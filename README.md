@@ -665,10 +665,10 @@ void doSomethingForImage() {
         cin>>rad;
         rad = 90 - rad;
         rad=(rad*22)/(7*180);  //change from radius into degree
-        double zz=256/(1+(tan(rad)));    //number of pixels of the compressed image
+        double zz = 256/(1+(tan(rad)));    //number of pixels of the compressed image
         double move=SIZE-zz;                  //number of pixels that are white before the compressed image
         double step=move/SIZE;                //the difference between the number of white pixels in each row
-        unsigned char img_skew[SIZE][SIZE+(int)move];
+        unsigned char img_skew[SIZE + (int)move][SIZE];
         unsigned char img_shrink[SIZE][SIZE];
         for(int i = 0; i <SIZE ; i++){
             for(int j = 0; j <SIZE ; j++){
@@ -681,11 +681,12 @@ void doSomethingForImage() {
                 img_shrink[i*(int)zz/SIZE][j] = image[i][j]  ;
             }
         }
-        for(int i = (int)move; i < move + zz; i++){
-            for(int j = 0; j <SIZE ; j++) {
-                img_skew[i][j] = img_shrink[(int)(i - move)][j];
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE ; j++){
+                img_skew[i+(int)move][j] =img_shrink[i][j];   //skew the image by skip the white pixels and put the compressed image
             }
-            move -= step;
+            move -= step;                                      //because of number of white pixels decline in each row to
+            //form the skewed image
         }
         for(int i = 0; i <SIZE ; i++){
             for(int j = 0; j <SIZE ; j++){
