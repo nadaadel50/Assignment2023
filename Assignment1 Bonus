@@ -792,7 +792,7 @@ void doSomethingForImage() {
         }
         for(int i = 0; i <SIZE ; i++){
             for(int j = 0; j <SIZE ; j++){
-                for(int k =0; k < SIZE; k++){
+                for(int k =0; k < 3; k++){
                     img_skew[i+(int)move][j][k] =img_shrink[i][j][k];
                 }
             }
