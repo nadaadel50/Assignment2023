@@ -682,9 +682,9 @@ void doSomethingForImage() {
                 img_shrink[i*(int)zz/SIZE][j] = image[i][j]  ;
             }
         }
-        for(int i = 0; i <SIZE ; i++){
-            for(int j = 0; j <SIZE ; j++){
-                img_skew[i+(int)move][j] =img_shrink[i][j];   //skew the image by skip the white pixels and put the compressed image
+        for(int j = 0; j <SIZE ; j++){
+            for(int i = move; i <SIZE ; i++){
+                img_skew[i][j] =img_shrink[i-(int)move][j];   //skew the image by skip the white pixels and put the compressed image
             }
             move -= step;                                      //because of number of white pixels decline in each row to
             //form the skewed image
