@@ -21,8 +21,8 @@ unsigned char image[SIZE][SIZE][RGB];
 unsigned char image2[SIZE][SIZE][RGB];
 unsigned char image_f[SIZE][SIZE][RGB];
 // To enter the number of the filter you want to use
-char choice;
-int degree;
+char choice , option;
+int degree , average , average2 , average3 ;
 int dx[] = {-1, 1, 0, 0 , -1, -1, 1, 1};
 int dy[] = {0, 0, -1, 1, -1, 1, -1, 1};
 void loadImage ();
@@ -122,7 +122,29 @@ void saveImage () {
 
 //_________________________________________
 void doSomethingForImage() {
-    if (choice == '2') {
+    if(choice == '1'){
+        // Black and white image
+        // after converting RGB values to grayscale by calculating the average of RGB
+        // We need to change every pixel that is greater than 127 to 255  to make it white and if it is
+        // less than 127 we change it to 0 to make it black
+
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j< SIZE; j++) {
+                for (int k = 0; k < 3; k++) {
+                    average=(image[i][j][0]+image[i][j][1]+image[i][j][2])/3;
+                    if (average > 127){
+                        image_f[i][j][k] = 255;
+                        image[i][j][k] = image_f[i][j][k];
+                    }
+                    else {
+                        image_f[i][j][k] = 0;
+                        image[i][j][k] = image_f[i][j][k];
+                    }
+                }
+            }
+        }
+    }
+    else if (choice == '2') {
         // Invert image
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -141,6 +163,52 @@ void doSomethingForImage() {
                 for(int k = 0; k < 3; k++){
                     image_f[i][j][k] = (image[i][j][k] + image2[i][j][k])/2;
                     image[i][j][k] = image_f[i][j][k];
+                }
+            }
+        }
+    }
+    else if(choice == '4'){
+        // Flip images
+        // We need to swap pixels to flip the image by using this algorithm
+        cout << "Flip (h)orizontally or (v)ertically? " << endl;
+        char direction; cin >> direction;
+        if(direction == 'H' || direction == 'h'){
+            // We figure out from drawing a matrix that (i) doesn't change but (j) changes with this algorithm
+            for(int i = 0; i < SIZE; i++){
+                for(int j = 0; j < SIZE/2+1; j++){
+                    for (int k = 0; k < 3; k++) {
+                        int tmp = image[i][j][k];
+                        image_f[i][j][k] = image[i][SIZE-1-j][k];
+                        image_f[i][SIZE-1-j][k] = tmp;
+                    }
+                }
+            }
+            // To put the new image after using the filter in the variable image
+            for(int i = 0; i < SIZE; i++){
+                for(int j = 0; j < SIZE; j++){
+                    for (int k = 0; k < 3; k++) {
+                        image[i][j][k] = image_f[i][j][k];
+                    }
+                }
+            }
+        }
+        else if(direction == 'V' || direction == 'v'){
+            // We figure out from drawing a matrix that (j) doesn't change but (i) changes with this algorithm
+            for(int i = 0; i < SIZE/2+1; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        int tmp = image[i][j][k];
+                        image_f[i][j][k] = image[SIZE-1-i][j][k];
+                        image_f[SIZE-1-i][j][k] = tmp;
+                    }
+                }
+            }
+            // To put the new image after using the filter in the variable image
+            for(int i = 0; i < SIZE; i++){
+                for(int j = 0; j < SIZE; j++){
+                    for (int k = 0; k < 3; k++) {
+                        image[i][j][k] = image_f[i][j][k];
+                    }
                 }
             }
         }
@@ -254,6 +322,41 @@ void doSomethingForImage() {
             }
         }
     }
+    else if(choice == '7'){
+        //detect image edges
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j< SIZE; j++) {
+                for (int k = 0; k < 3; k++) {
+                    image_f[i][j][k]=255;
+                    average=(image[i][j][0]+image[i][j][1]+image[i][j][2])/3;
+                    average2=(image[i][j+1][0]+image[i][j+1][1]+image[i][j+1][2])/3;
+                    average3=(image[i+1][j][0]+image[i+1][j][1]+image[i+1][j][2])/3;
+                    // after converting RGB values to grayscale by calculating the average of RGB
+                    //we compare each pixel with the one besides it to check they are different from each other in lighting
+                    //if true we change the pixel to black to be the image edge
+                    if ((average > 127 && average2 < 127) || (average < 127 && average2 >127)){
+                        image_f[i][j][k] = 0;
+                    }
+                        //compare each pixel with the one below it to check they are different from each other in lighting
+                        // if true we change the pixel to black to be the image edge
+                    else if((average > 127 && average3 < 127) || (average < 127 && average3 > 127)){
+                        image_f[i][j][k] = 0;
+                    }
+                        // if false we change the pixel to white (to be outside the image edge)
+                    else
+                        image_f[i][j][k] = 255;
+                }
+            }
+        }
+        // To put the new image after using the filter in the variable image
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j < SIZE; j++){
+                for (int k = 0; k < 3; k++) {
+                    image[i][j][k] = image_f[i][j][k];
+                }
+            }
+        }
+    }
     else if (choice == '8') {
         cout << "choose the number of the quarter that you want to enlarge :  " << endl;
         cout << "1- first quarter " << endl;
@@ -340,6 +443,68 @@ void doSomethingForImage() {
                     }
                 }
             }
+    }
+    else if(choice =='a'){
+        //mirror image
+        cout<<"Please,select an option to Mirror 1/2 an image "<< endl;
+        cout<<"a- Left"<< endl;
+        cout<<"b- Right"<< endl;
+        cout<<"c- Upper"<< endl;
+        cout<<"d- Lower"<< endl;
+        cin>>option;
+        //mirror the image 1/2 left
+        if(option=='a'){
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j< SIZE/2+1; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i][j][k];
+                        image_f[i][SIZE-1-j][k] = image[i][j][k];
+                    }
+                }
+            }
+        }
+            //mirror the image 1/2 right
+        else if(option=='b'){
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j< SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i][j][k];
+                        image_f[i][SIZE-1-j][k] = image[i][j][k];
+                    }
+                }
+            }
+        }
+            //mirror the image 1/2 upper
+        else if(option=='c'){
+            for (int i = 0; i < SIZE/2; i++) {
+                for (int j = 0; j< SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i][j][k];
+                        image_f[SIZE-1-i][j][k] = image[i][j][k];
+                    }
+                }
+            }
+        }
+            //mirror the image 1/2 lower
+        else{
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j< SIZE; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_f[i][j][k] = image[i][j][k];
+                        image_f[SIZE-1-i][j][k] = image[i][j][k];
+                    }
+                }
+            }
+        }
+        // To put the new image after using the filter in the variable image
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j< SIZE; j++) {
+                for (int k = 0; k < 3; k++) {
+                    image[i][j][k] = image_f[i][j][k];
+                }
+            }
+        }
+
     }
     else if(choice=='b'){
         cout<<"write the order you want : "<<endl;
@@ -523,6 +688,38 @@ void doSomethingForImage() {
             }
         }
     }
+    else if(choice =='d'){
+        //crop image
+        int x,y,l,w;
+        cout<<"please enter x and y positions\n";
+        cin>>x>>y;
+        cout<<"please enter length and width\n";
+        cin>>l>>w;
+        // make new white image
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j< SIZE; j++) {
+                for(int k = 0; k < 3; k++) {
+                    image_f[i][j][k] = 255;
+                }
+            }
+        }
+        //cutting a square of length and width l, w from position x,y from an image to be put in the white image
+        for (int i = x; i < l+x; i++) {
+            for (int j = y; j<w+y ; j++) {
+                for(int k = 0; k < 3; k++) {
+                    image_f[i][j][k] = image[i][j][k];
+                }
+            }
+        }
+        // To put the new image after using the filter in the variable image
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j<SIZE ; j++) {
+                for(int k = 0; k < 3; k++) {
+                    image[i][j][k] = image_f[i][j][k];
+                }
+            }
+        }
+    }
     else if(choice=='e'){
         cout<<"Enter the degree of skew to skew it horizontally :  "<<endl;
         double rad;             //the degree in radius
@@ -611,26 +808,3 @@ void doSomethingForImage() {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
