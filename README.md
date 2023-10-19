@@ -659,6 +659,40 @@ void doSomethingForImage() {
           }
        }
     }
+    else if(choice == 'f'){
+        cout<<"Enter the degree of skew to skew it vertically : "<<endl;
+        double rad;             //the degree in radius
+        cin>>rad;
+        rad = 90 - rad;
+        rad=(rad*22)/(7*180);  //change from radius into degree
+        double zz=256/(1+(tan(rad)));    //number of pixels of the compressed image
+        double move=SIZE-zz;                  //number of pixels that are white before the compressed image
+        double step=move/SIZE;                //the difference between the number of white pixels in each row
+        unsigned char img_skew[SIZE][SIZE+(int)move];
+        unsigned char img_shrink[SIZE][SIZE];
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE ; j++){
+                img_shrink[i][j] = 255 ;  //making the background white
+                img_skew[i][j] = 255;
+            }
+        }
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE; j++){
+                img_shrink[i*(int)zz/SIZE][j] = image[i][j]  ;
+            }
+        }
+        for(int i = (int)move; i < move + zz; i++){
+            for(int j = 0; j <SIZE ; j++) {
+                img_skew[i][j] = img_shrink[(int)(i - move)][j];
+            }
+            move -= step;
+        }
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE ; j++){
+                image_f[i][j] =img_skew[i][j];   //save the skewed image into image_f
+            }
+        }
+    }
 }
 
 
