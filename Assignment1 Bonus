@@ -1,7 +1,7 @@
-// CS213-2023-20221179-20221042-20220130-A1-Part1.cpp
+// CS213-2023-s2-s2-s13-20221179-20221042-20220130-A1-Bonus.cpp
 
 // FCAI - OOP Programming - 2023 - Assignment 1
-// Program Name: CS213-2023-20221179-20221042-20220130-A1-Part1.cpp
+// Program Name: CS213-2023-s2-s2-s13-20221179-20221042-20220130-A1-Bonus.cpp
 // Last Modification Date : 10/10/2023
 // Author1 and ID : Nada Adel Ahmed Nagy          (20221179) Email: dew.sara2004@gmail.com
 // Author2 and ID : Touka Atef El-Sayed Abu-ElAzm (20221042) Email: toukaatef48@gmail.com
@@ -35,7 +35,7 @@ int main()
     doSomethingForImage();
     while(choice != '0'){
         // Selecting the filter
-        cout << "Please, select a filter to apply " << endl;
+        cout << "Please, select a filter to apply or 0 to exit" << endl;
         cout << "1- Black & White Filter" << endl;
         cout << "2- Invert Filter" << endl;
         cout << "3- Merge Filter" << endl;
@@ -51,6 +51,7 @@ int main()
         cout << "d- Crop Image" << endl;
         cout << "e- skew Image Right" << endl;
         cout << "f- skew Image Up" << endl;
+        cout << "0- Exit" << endl;
         cin >> choice;
         if(choice == '3'){
             char image2File[100];
@@ -77,7 +78,7 @@ void loadImage () {
     cout << "Enter the source image file name: ";
     cin >> imageFileName;
     // Selecting the filter
-    cout << "Please, select a filter to apply " << endl;
+    cout << "Please, select a filter to apply or 0 to exit" << endl;
     cout << "1- Black & White Filter" << endl;
     cout << "2- Invert Filter" << endl;
     cout << "3- Merge Filter" << endl;
@@ -93,6 +94,7 @@ void loadImage () {
     cout << "d- Crop Image" << endl;
     cout << "e- skew Image Right" << endl;
     cout << "f- skew Image Up" << endl;
+    cout << "0- Exit" << endl;
     cin >> choice;
     // Add to it .bmp extension and load image
     strcat (imageFileName, ".bmp");
@@ -790,13 +792,13 @@ void doSomethingForImage() {
                 }
             }
         }
-        for(int i = 0; i <SIZE ; i++){
-            for(int j = 0; j <SIZE ; j++){
-                for(int k =0; k < 3; k++){
-                    img_skew[i+(int)move][j][k] =img_shrink[i][j][k];
+        for(int j = 0; j <SIZE ; j++){
+            for(int i = move; i <SIZE ; i++){
+                for(int k = 0; k < 3; k++){
+                    img_skew[i][j][k] = img_shrink[i-(int)move][j][k];   //skew the image by skip the white pixels and put the compressed image
                 }
             }
-            move -= step;
+            move -= step;                                      //because of number of white pixels decline in each row to
             //form the skewed image
         }
         for(int i = 0; i <SIZE ; i++){
