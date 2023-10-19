@@ -1,7 +1,7 @@
-// CS213-2023-s2-s2-s13-20221179-20221042-20220130-A1-FULL.cpp
+// CS213-2023-20221179-20221042-20220130-A1-Part1.cpp
 
 // FCAI - OOP Programming - 2023 - Assignment 1
-// Program Name: CS213-2023-s2-s2-s13-20221179-20221042-20220130-A1-FULL.cpp
+// Program Name: CS213-2023-20221179-20221042-20220130-A1-Part1.cpp
 // Last Modification Date : 10/10/2023
 // Author1 and ID : Nada Adel Ahmed Nagy          (20221179) Email: dew.sara2004@gmail.com
 // Author2 and ID : Touka Atef El-Sayed Abu-ElAzm (20221042) Email: toukaatef48@gmail.com
@@ -446,7 +446,7 @@ void doSomethingForImage() {
 
     }
     else if(choice == 'b'){
-        cout<<"write the order you want : "<<endl;
+        cout<<"Write the order you want : "<<endl;
         int first ,second,third,fourth;
         cin>>first>>second>>third>>fourth;
 
@@ -472,7 +472,7 @@ void doSomethingForImage() {
                     image_f[i][j] = image[i+127][j];
                 }
             }
-        }else{
+        }else if(first == 4){
             for (int i = 0; i < (SIZE / 2) + 1; i++) {       // we loop in the first quarter of the new image
                 for (int j = 0; j < (SIZE / 2) + 1; j++) {
                     image_f[i][j] = image[i+127][j+127];
@@ -501,7 +501,7 @@ void doSomethingForImage() {
                     image_f[i][j] = image[i+127][j-127];
                 }
             }
-        }else{
+        }else if(second == 4){
             for (int i = 0; i < (SIZE / 2) + 1; i++) {       // we loop in the first quarter of the new image
                 for (int j = (SIZE / 2) + 1; j <SIZE ; j++) {
                     image_f[i][j] = image[i+127][j];
@@ -530,7 +530,7 @@ void doSomethingForImage() {
                     image_f[i][j] = image[i][j];
                 }
             }
-        }else{
+        }else if(second == 4){
             for (int i = (SIZE / 2) + 1;  i<SIZE ;i++) {       // we loop in the first quarter of the new image
                 for (int j =0; j <(SIZE / 2) + 1 ; j++) {
                     image_f[i][j]= image[i][j+127];
@@ -560,7 +560,7 @@ void doSomethingForImage() {
                     image_f[i][j] = image[i][j - 127];
                 }
             }
-        }else{
+        }else if(fourth == 4){
             for (int i = (SIZE / 2) + 1;  i<SIZE ;i++) {       // we loop in the first quarter of the new image
                 for (int j = (SIZE / 2) + 1;  j<SIZE ; j++) {
                     image_f[i][j] = image[i][j];
@@ -568,11 +568,6 @@ void doSomethingForImage() {
                 }
             }
         }
-
-
-
-
-
     }
     else if(choice == 'c'){
         // Blur the image
