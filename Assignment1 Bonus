@@ -510,21 +510,21 @@ void doSomethingForImage() {
                         image_f[i][j][k] = sum / 8;
                     }
                 }
-                    }
+            }
 
-                    }
+        }
 
-            // To put the new image after using the filter in the variable image
-            for (int i = 0; i < SIZE; i++) {
-                for (int j = 0; j < SIZE; j++) {
-                    for(int k = 0; k < 3; k++) {
-                        image[i][j][k] = image_f[i][j][k];
-                    }
+        // To put the new image after using the filter in the variable image
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                for(int k = 0; k < 3; k++) {
+                    image[i][j][k] = image_f[i][j][k];
                 }
             }
         }
+    }
     else if(choice=='e'){
-        cout<<"enter the degree: "<<endl;
+        cout<<"Enter the degree of skew to skew it horizontally :  "<<endl;
         double rad;             //the degree in radius
         cin>>rad;
         rad = 90 - rad;
@@ -567,7 +567,65 @@ void doSomethingForImage() {
             }
         }
     }
+    else if(choice == 'f'){
+        cout<<"Enter the degree of skew to skew it vertically : "<<endl;
+        double rad;             //the degree in radius
+        cin>>rad;
+        rad = 90 - rad;
+        rad=(rad*22)/(7*180);  //change from radius into degree
+        double zz = 256/(1+(tan(rad)));    //number of pixels of the compressed image
+        double move=SIZE-zz;                  //number of pixels that are white before the compressed image
+        double step=move/SIZE;                //the difference between the number of white pixels in each row
+        unsigned char img_skew[SIZE + (int)move][SIZE][RGB];
+        unsigned char img_shrink[SIZE][SIZE][RGB];
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE ; j++){
+                for(int k = 0; k < 3; k++){
+                    img_shrink[i][j][k] = 255 ;  //making the background white
+                    img_skew[i][j][k] = 255;
+                }
+            }
+        }
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE; j++){
+                for(int k = 0; k < 3; k++){
+                    img_shrink[i*(int)zz/SIZE][j][k] = image[i][j][k];
+                }
+            }
+        }
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE ; j++){
+                for(int k =0; k < SIZE; k++){
+                    img_skew[i+(int)move][j][k] =img_shrink[i][j][k];
+                }
+            }
+            move -= step;
+            //form the skewed image
+        }
+        for(int i = 0; i <SIZE ; i++){
+            for(int j = 0; j <SIZE ; j++){
+                for(int k = 0; k < 3; k++){
+                    image_f[i][j][k] = img_skew[i][j][k];   //save the skewed image into image_f
+                }
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
